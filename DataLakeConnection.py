@@ -12,7 +12,7 @@ class DatalakeConnnection():
     def __init__(
             self,
             storage_account_name: str,
-            sas_token: str
+            sas_token: str,
     ):
         self.service_client = DataLakeServiceClient(
             account_url=f"https://{storage_account_name}.dfs.core.windows.net",

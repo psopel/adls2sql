@@ -1,27 +1,21 @@
 from DataLakeConnection import DatalakeConnnection
 from TableMapping import TableMapping
+from utils import read_table_mappings_from_file
 
 with open('./sastoken.txt','r') as f:
-    token = f.read()
+    TOKEN = f.read()
 
-con = DatalakeConnnection('sopeladlsxxd69',token)
+ADLS_ACCOUNT_NAME = 'sopeladlsxxd69'
+
+con = DatalakeConnnection(ADLS_ACCOUNT_NAME,TOKEN)
 print(con.list_files('test','/'))
 
-table_mappings = [
-    TableMapping(
-        file_format='CSV',
-        cached_table_name='organizations',
+table_mappings  = read_table_mappings_from_file(
+        storage_account_name=ADLS_ACCOUNT_NAME,
         container_name='test',
-        datalake_path='organizations-100000.csv'
-    ),
-    TableMapping(
-        file_format='AVRO',
-        cached_table_name='twitter',
-        container_name='test',
-        datalake_path='twitter.avro'
-    )
-]
-
+        file_name='mappings.json',
+        sas_token=TOKEN
+)
 res = con.execute_sql_dict_output(
     mappings=table_mappings,
     sql='SELECT * FROM twitter'

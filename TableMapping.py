@@ -9,7 +9,6 @@ class TableMapping(object):
             column_mappings: list()=[]
     ):
 
-
         ALLOWED_FILE_FORMATS = ['CSV','JSON','AVRO']
         if file_format not in ALLOWED_FILE_FORMATS:
             raise Exception(f'{file_format} file format not allowed. Allowed formats are: {", ".join(ALLOWED_FILE_FORMATS)}.')
@@ -19,3 +18,5 @@ class TableMapping(object):
         self.cached_table_name = cached_table_name
         self.datalake_path = datalake_path
         self.column_mappings = column_mappings
+
+
