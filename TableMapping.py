@@ -10,7 +10,7 @@ class TableMapping(object):
     ):
 
 
-        ALLOWED_FILE_FORMATS = ['CSV','JSON']
+        ALLOWED_FILE_FORMATS = ['CSV','JSON','AVRO']
         if file_format not in ALLOWED_FILE_FORMATS:
             raise Exception(f'{file_format} file format not allowed. Allowed formats are: {", ".join(ALLOWED_FILE_FORMATS)}.')
 

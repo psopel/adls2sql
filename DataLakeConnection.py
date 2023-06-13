@@ -2,8 +2,10 @@ from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeServiceClient
 from CSVDeserializer import CSVDeserializer
 from JSONDeserializer import JSONDeserializer
+from AvroDeserializer import AvroDeserializer
 
 import sqlite3
+import io
 
 class DatalakeConnnection():
 
@@ -35,7 +37,8 @@ class DatalakeConnnection():
     def get_file_contents(
             self,
             container_name: str,
-            file_path: str
+            file_path: str,
+            file_format: str
     ) -> str:
         
         directory_path = '/'.join(
@@ -53,7 +56,11 @@ class DatalakeConnnection():
         )
         file_client = directory_client.get_file_client(file_name)
         download = file_client.download_file()
-        return(download.readall().decode('utf-8'))
+        if file_format in ('CSV','JSON'):
+            return(download.readall().decode('utf-8'))
+        elif file_format == 'AVRO':
+            res = download.readall()
+            return(io.BytesIO(res))
     
     def get_column_names(
             self,
@@ -63,12 +70,15 @@ class DatalakeConnnection():
             first_row_as_header: bool
         ) -> list():
         
-        file_contents = self.get_file_contents(container_name, file_path)
+        file_contents = self.get_file_contents(container_name, file_path, file_format)
         if file_format == 'CSV':
             deserializer = CSVDeserializer(file_contents, first_row_as_header)
         elif file_format == 'JSON':
             deserializer = JSONDeserializer(file_contents)
+        elif file_format == 'AVRO':
+            deserializer = AvroDeserializer(file_contents)
         return deserializer.get_column_names()
+             
 
     def get_rows(
             self,
@@ -78,12 +88,14 @@ class DatalakeConnnection():
             skip_first_row: bool=False
     ) -> list():
 
-        csv_contents = self.get_file_contents(container_name, file_path)
+        csv_contents = self.get_file_contents(container_name, file_path, file_format)
         headers_in_first_row = skip_first_row
         if file_format == 'CSV':
             deserializer = CSVDeserializer(csv_contents, headers_in_first_row)
         elif file_format =='JSON':
             deserializer = JSONDeserializer(csv_contents)
+        elif file_format == 'AVRO':
+            deserializer = AvroDeserializer(csv_contents)
         return(deserializer.as_table())
 
     def get_rows_from_directory(
@@ -174,15 +186,14 @@ class DatalakeConnnection():
             container_name=container_name,
             file_path=file_path,
             skip_first_row=True
-        )
-      
+        )      
         i = 0
         y = len(data_rows)
         for x in data_rows:
             i += 1
             dml_sql  = f'INSERT INTO {cached_table_name} ('
             dml_sql += ','.join(column_names)
-            dml_sql += ') VALUES (' + ','.join(["'" + y.replace("'","''") + "'" for y in x]) + ');'
+            dml_sql += ') VALUES (' + ','.join(["'" + str(y).replace("'","''") + "'" for y in x]) + ');'
             self.sqlite3_connection.execute(dml_sql)
         self.sqlite3_connection.commit()
 

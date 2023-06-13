@@ -1,7 +1,7 @@
 from avro.datafile import DataFileReader
 from avro.io import DatumReader
 
-class AvroDederializer():
+class AvroDeserializer():
 
     def __init__(self, avro_data: bytes):
 
@@ -11,7 +11,7 @@ class AvroDederializer():
 
         reader = DataFileReader(self.avro_data, DatumReader())
         for row in reader:
-            return(list(row.keys))
+            return(list(row.keys()))
 
     def as_table(self) -> list():
         res = []

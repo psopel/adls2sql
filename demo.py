@@ -12,13 +12,19 @@ table_mappings = [
         file_format='CSV',
         cached_table_name='organizations',
         container_name='test',
-        datalake_path='organizations-100000.csv'  
+        datalake_path='organizations-100000.csv'
+    ),
+    TableMapping(
+        file_format='AVRO',
+        cached_table_name='twitter',
+        container_name='test',
+        datalake_path='twitter.avro'
     )
 ]
 
-res = con.execute_sql(
+res = con.execute_sql_dict_output(
     mappings=table_mappings,
-    sql='SELECT * FROM organizations LIMIT 100;'
+    sql='SELECT * FROM twitter'
 )
 
 print(res)
