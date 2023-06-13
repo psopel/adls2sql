@@ -1,0 +1,3 @@
+avro
+azure-identity
+azure-storage-file-datalake
