@@ -1,0 +1,12 @@
+1. First code refactoring, especially in DatalakeConnection
+2. DatalakeConnection should be able to return a cursor
+3. Docstrings in all methods/functions
+4. Support for Parquet and ORC
+5. Support for filesystems other than ADLS Gen2:
+    * Regular Azure Blob Containers
+    * Local / SMB filesystems
+    * Amazon S3 buckets
+    * Google Cloud Storage
+6. Filenames stored as metadata in cached SQLite3 tables
+7. Changes to sqlite3 tables (INSERT/UPDATE) should be commited back to files when requested
+8. Real docs and manuals
