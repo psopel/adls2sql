@@ -1,12 +1,15 @@
-1. First code refactoring, especially in DatalakeConnection
+1. First code refactoring, especially in DatalakeConnection (private methods!)
 2. DatalakeConnection should be able to return a cursor
 3. Docstrings in all methods/functions
 4. Support for Parquet and ORC
-5. Support for filesystems other than ADLS Gen2:
+5. Reading column mappings should be done inside DatalakeConnection
+   rather than a special utility function
+6. first_row_as_header should be
+7. Support for filesystems other than ADLS Gen2:
     * Regular Azure Blob Containers
     * Local / SMB filesystems
     * Amazon S3 buckets
     * Google Cloud Storage
-6. Filenames stored as metadata in cached SQLite3 tables
-7. Changes to sqlite3 tables (INSERT/UPDATE) should be commited back to files when requested
-8. Real docs and manuals
+8. Filenames stored as metadata in cached SQLite3 tables
+9. Changes to sqlite3 tables (INSERT/UPDATE) should be commited back to files when requested
+10. Real docs and manuals
